@@ -1,9 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TodoForm from './TodoForm';
 import Todo from './Todo';
+import * as storage from '../services/localStorage';
+
+const STORAGE_KEY = 'todos';
 
 function TodoList() {
-  const [todos, setTodos] = useState([]); //сделать считывание с localStorage
+  const [todos, setTodos] = useState(
+    //линивая инициализация стейта - не будет вызываться каждый раз при перерендаре компонента
+    () => storage.get(STORAGE_KEY) ?? [],
+  ); //сделать считывание с localStorage
+
+  // const [todos, setTodos] = useState([]); //сделать считывание с localStorage
+
+  // eslint-disable-next-line no-undef
+  useEffect(() => {
+    storage.save(STORAGE_KEY, todos);
+  }, [todos]);
+
 
   // ***************  ADD  *************** //
   const addTodo = todo => {
